@@ -1,12 +1,15 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Calculator from './Calculator';
+import Calculator from './components/Calculator';
+import Clarification from './components/Clarification';
+import ProjectInformation from './components/ProjectInformation';
 
 function App() {
   return (
-    <div>
+    <div id="app">
       <Calculator />
+      <Clarification />
+      <ProjectInformation />
     </div>
   );
 }
