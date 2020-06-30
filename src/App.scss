@@ -1,0 +1,48 @@
+
+$calculatorBgColour: inherit;
+$infoCardBgColour: inherit;
+
+.app{
+    padding-top: 2em;
+
+    .calculator{  
+        .top-row{
+            width: 100%;
+            padding-bottom: 1em;
+            button{
+                width: 40%;
+            }
+        }
+        .middle-row{
+            width:100%;
+
+            .left-side{
+                width: 58%;
+                float:left;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                row-gap: 0.2em;
+            }
+            .right-side{
+                width: 40%;
+                float: right;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                row-gap: 0.2em;
+            }
+        }
+
+        .bottom-row{
+            width: 100%;
+            padding-top: 1em;
+            button{
+                width: 40%;
+            }
+        }
+        background-color: $calculatorBgColour;
+    }
+
+    .information-card{
+        background-color: $infoCardBgColour;
+    }
+}

@@ -60,6 +60,21 @@ function recursionRemove(arr,ind,oppos){
 export default (input) => {
     let t = input;
     t = t.replace(/'/g,"");
+
+    let i=0;
+    while(t.charAt(i).match(/\d/g)===null){
+        if(t.charAt(i)!=='-'){
+            let part1 = t.substring(0, i);
+            let part2 = t.substring(i + 1, t.length);
+            t = (part1 + part2);
+            i--;
+        }
+        else if(i>t.length){
+            break;
+        }
+        i++;
+    }
+
     if(t.match(/\*(\*)+/g)!==null){t = t.replace(/\*(\*)+/g,"^");}
     if(t.match(/\+(\+)+/g)!==null){t = t.replace(/\+(\+)+/g,"+");}
     if(t.match(/-(-)+/g)!==null){t = t.replace(/-(-)+/g,"-");}
@@ -80,5 +95,8 @@ export default (input) => {
     }
     if(t.match(/(?<=\d)\(/g) !=null){t = t.replace(/(?<=\d)\(/g,"*(");}
     if(t.match(/(?=\d)\)/g) !=null){t = t.replace(/(?=\d)\)/g,"*)");}
+    if(t.match(/\d/g) ===null){t = ''}
+    t = t.replace(/^[+%^*/]+|[+\-%^*/]+$/g,"");
+    t=t.trim();
     return t;
 }

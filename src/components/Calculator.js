@@ -1,28 +1,32 @@
 import React from 'react'
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import useInput from '../logic/useInput';
+import UseInput from '../logic/UseInput';
 
 class Calculator extends React.Component{
     
-    state = { equation: '', answer: 'Answer'};
+    state = { equation: '', answer: ''};
     
-
     Clear(){
         this.setState({
             equation: "", 
-            answer: "Answer"
+            answer: "",
+            error: false,
         });
     }
 
     Calculate = () => {
-        const output = useInput(this.state.equation);
-        this.setState({answer: output});
+        const [output, cleaned, flag] = UseInput(this.state.equation);
+        this.setState({
+            answer: output,
+            equation: cleaned,
+            error: flag
+        });
     }
 
     AddChar(char){
         let v = this.state.equation;
         if(char==="enter" ||char==="="){ 
-            if(v.length<=0){ this.setState({answer: "Answer"}); return;}
+            if(v.length<=0){ this.setState({answer: ""}); return;}
             this.Calculate(); return; 
         }
         if(char==="c"){ this.Clear(); return; }
@@ -30,7 +34,6 @@ class Calculator extends React.Component{
             v = v.substring(0,v.length-1);
             this.setState({ 
                 equation: v, 
-                answer: "...fixing"
             });
         }
         else{
@@ -48,60 +51,76 @@ class Calculator extends React.Component{
     }
 
     render(){
-        let digits = [1,2,3,4,5,6,7,8,9];
+
+        const equationErrFlag = this.state.error === true ? 'error' : '';
+
         return(
             <div>
-                <KeyboardEventHandler
+            <KeyboardEventHandler
                     handleKeys={['numeric','shift+8','-','/',
                         'shift+9','shift+0','shift+=','backspace',
                         'enter','shift+-', 'shift+5', 'shift+6',
                         'c','=','.',"'"]}
                     onKeyEvent={(key)=>{this.AddChar(key)}}
-                />
-                <div id="base2">
-                    <div className="calculator">
-                        
-                        <h1>Calculator</h1>
-                        <div id="top-row">
-                            <input id="input"
-                                name='equation'
-                                value={this.state.equation}
-                                readOnly
-                            />
-                            <button id="undo" onClick={()=>this.AddChar("backspace")}>&lt;--</button>
+            />
+            <div className="calculator ui raised segment">
+                <div>    
+                    <h1 className="ui header">
+                        <i className="calculator icon"/>   
+                        <div className="content">
+                            Calculator
                         </div>
-                        <br></br>
-                        <input id="output"
+                    </h1>
+                    <div className={`top-row ui action input ${equationErrFlag}`}>
+                        <input
+                            placeholder="Equation"
+                            value={this.state.equation}
+                            type="text"
+                            readOnly
+                        />
+                        <button className="ui red button" onClick={()=>this.Clear()}>CLEAR</button>
+                    </div>
+                    <div className="middle-row">
+                        <div className='left-side'>
+                            <button className="ui button" onClick={() => this.AddChar('7')}>7</button>
+                            <button className="ui button" onClick={() => this.AddChar('8')}>8</button>
+                            <button className="ui button" onClick={() => this.AddChar('9')}>9</button>
+                            
+                            <button className="ui button" onClick={() => this.AddChar('4')}>4</button>
+                            <button className="ui button" onClick={() => this.AddChar('5')}>5</button>
+                            <button className="ui button" onClick={() => this.AddChar('6')}>6</button>
+
+                            <button className="ui button" onClick={() => this.AddChar('1')}>1</button>
+                            <button className="ui button" onClick={() => this.AddChar('2')}>2</button>
+                            <button className="ui button" onClick={() => this.AddChar('3')}>3</button>
+
+                            <button className="ui primary button" onClick={()=>this.AddChar("backspace")}>&lt;-</button>
+                            <button className="ui button" onClick={() => this.AddChar('0')}>0</button>
+                            <button className="ui grey button" onClick={() => this.AddChar('.')}>.</button>
+                        </div>
+                        <div className='right-side'>
+                            <button className="ui grey button" onClick={() => this.AddChar('^')}>^</button>
+                            <button className="ui grey button" onClick={() => this.AddChar('%')}>Mod (%)</button>
+                            <button className="ui grey button" onClick={() => this.AddChar('(')}>(</button>
+                            <button className="ui grey button" onClick={() => this.AddChar(')')}>)</button>
+                            <button className="ui grey button" onClick={() => this.AddChar('*')}>*</button>
+                            <button className="ui grey button" onClick={() => this.AddChar('/')}>/</button>
+                            <button className="ui grey button" onClick={() => this.AddChar('+')}>+</button>
+                            <button className="grey ui button" onClick={() => this.AddChar('-')}>-</button>
+                        </div>
+                    </div>
+                    <div className="bottom-row ui action input">
+                        <input 
+                            type="text"
+                            name='equation'
+                            placeholder="Answer"
                             value={this.state.answer}
-                            readOnly/>
-                        <div>
-                            <div id="numbers">
-                                <button  className="input-0"
-                                onClick={() => this.AddChar("0")}>0</button>
-                                <div id="digits">
-                                    {digits.map(item => <button id = "number-button" className={"input-"+item}
-                                    onClick={() => this.AddChar(item)}>{item}</button>).reverse()}
-                                </div> 
-                            </div>
-                            <div id="operations">
-                                <button id="operator" onClick={() => this.AddChar('(')}>(</button>
-                                <button id="operator" onClick={() => this.AddChar(')')}>)</button>
-                                <button id="operator" onClick={() => this.AddChar('+')}>+</button>
-                                <button id="operator" onClick={() => this.AddChar('-')}>-</button>
-                                <button id="operator" onClick={() => this.AddChar('*')}>*</button>
-                                <button id="operator" onClick={() => this.AddChar('/')}>/</button>
-                                <button id="operator" onClick={() => this.AddChar('%')}>%</button>
-                                <button id="operator" onClick={() => this.AddChar('^')}>^</button>
-                                <button id="operator" onClick={() => this.AddChar('.')}>.</button>
-                            </div> 
-                            <div id="big-action">
-                                <button id="enter" onClick={()=>this.AddChar("enter")}>=</button>
-                                <button id="clear" onClick={()=>this.Clear()}>CLEAR</button>
-                            </div>
-                        </div>
-                        <br></br>
+                            readOnly
+                        />
+                        <button className="ui primary button" onClick={()=>this.AddChar("enter")}>=</button>
                     </div>
                 </div>
+            </div>
             </div>
         )
     }

@@ -7,7 +7,7 @@ const Clarification = () => {
     function renderList(vis){
         if(vis===true){
             return(
-                <ul>
+                <ul className="ui list">
                     <li>
                         Input follows a "coding style". I.e. "2**3" = 8 etc.
                     </li>
@@ -20,7 +20,6 @@ const Clarification = () => {
                     <li>
                         "%" is a modulous operation, not a percent operator
                     </li>
-                    <br></br>
                     <li>
                         If you don't imply multiplication on brackets--it's okay! Things like "5(6)" will work the same as 5*6.
                     </li>
@@ -39,11 +38,9 @@ const Clarification = () => {
     }
 
     return(
-        <div id="base">
-            <div id="instructions">
-                <button onClick={()=>setVisible(!visibile)}>Instructions/Clarification</button>
-                {renderList(visibile)}
-            </div>
+        <div className="clarification">
+            <button className="ui mini button" onClick={()=>setVisible(!visibile)}>Instructions/Clarification</button>
+            {renderList(visibile)}
         </div>
     )
 }
